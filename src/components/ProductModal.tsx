@@ -1,99 +1,158 @@
-import { X, Plus, Minus } from 'lucide-react';
-import { Product } from '../data/products';
-import { useState } from 'react';
+import { Product } from "@/types/product";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Minus, Plus, ShoppingCart, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface ProductModalProps {
   product: Product | null;
+  isOpen: boolean;
   onClose: () => void;
-  onAddToCart: (product: Product, size: string, quantity: number) => void;
+  onAddToCart: (product: Product, size: string, quantity: number, color: string) => void;
 }
 
-export default function ProductModal({ product, onClose, onAddToCart }: ProductModalProps) {
-  const [selectedSize, setSelectedSize] = useState('');
+export const ProductModal = ({ product, isOpen, onClose, onAddToCart }: ProductModalProps) => {
+  const [selectedSize, setSelectedSize] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [currentColorIndex, setCurrentColorIndex] = useState(0);
 
   if (!product) return null;
 
+  const currentColor = product.colorVariants[currentColorIndex];
+  const displayedImage = currentColor?.image || product.image;
+  const selectedColor = currentColor?.name || "";
+
+  const handleNextColor = () => {
+    if (currentColorIndex < product.colorVariants.length - 1) {
+      setCurrentColorIndex(currentColorIndex + 1);
+    }
+  };
+
+  const handlePreviousColor = () => {
+    if (currentColorIndex > 0) {
+      setCurrentColorIndex(currentColorIndex - 1);
+    }
+  };
+
   const handleAddToCart = () => {
     if (!selectedSize) {
-      alert('Please select a size');
+      toast.error("Please select a size");
       return;
     }
-    onAddToCart(product, selectedSize, quantity);
+    onAddToCart(product, selectedSize, quantity, selectedColor);
+    setSelectedSize("");
+    setCurrentColorIndex(0);
+    setQuantity(1);
     onClose();
   };
 
   return (
-    <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-neutral-900 rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <div className="sticky top-0 bg-neutral-900 border-b border-white/10 p-4 flex justify-between items-center">
-          <h2 className="text-xl font-bold text-white">Product Details</h2>
-          <button onClick={onClose} className="text-white/60 hover:text-white">
-            <X size={24} />
-          </button>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-8 p-6">
-          <div className="rounded-lg overflow-hidden">
-            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-4xl">
+        <DialogHeader>
+          <DialogTitle className="text-2xl">{product.name}</DialogTitle>
+        </DialogHeader>
+        <div className="grid md:grid-cols-2 gap-8">
+          <div className="relative aspect-square bg-secondary rounded-lg overflow-hidden">
+            <img
+              src={displayedImage}
+              alt={`${product.name} - ${selectedColor}`}
+              className="h-full w-full object-cover transition-all duration-300"
+            />
+            {product.colorVariants.length > 1 && (
+              <>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
+                  onClick={handlePreviousColor}
+                  disabled={currentColorIndex === 0}
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-background/80 hover:bg-background"
+                  onClick={handleNextColor}
+                  disabled={currentColorIndex === product.colorVariants.length - 1}
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </Button>
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-background/80 px-3 py-1 rounded-full">
+                  <p className="text-sm font-medium">{selectedColor}</p>
+                </div>
+              </>
+            )}
           </div>
-
-          <div className="space-y-6">
+          <div className="flex flex-col gap-6">
             <div>
-              <p className="text-[#D4AF37] text-sm mb-2">{product.category}</p>
-              <h3 className="text-3xl font-bold text-white mb-4">{product.name}</h3>
-              <p className="text-2xl font-bold text-[#D4AF37]">${product.price}</p>
+              <p className="text-sm text-muted-foreground mb-2">{product.category}</p>
+              <p className="text-3xl font-bold text-gold">₦{product.price.toLocaleString()}</p>
+            </div>
+            
+            <div>
+              <p className="text-foreground">{product.description}</p>
             </div>
 
-            <p className="text-white/70">{product.description}</p>
+            {product.colorVariants.length > 1 && (
+              <div className="bg-muted/50 p-3 rounded-lg">
+                <p className="text-sm text-muted-foreground text-center">
+                  Use the arrows on the image to browse {product.colorVariants.length} available colors
+                </p>
+              </div>
+            )}
 
             <div>
-              <label className="text-white font-semibold mb-3 block">Select Size</label>
+              <label className="text-sm font-medium mb-2 block">Select Size</label>
               <div className="flex flex-wrap gap-2">
                 {product.sizes.map((size) => (
-                  <button
+                  <Button
                     key={size}
+                    variant={selectedSize === size ? "default" : "outline"}
+                    size="sm"
                     onClick={() => setSelectedSize(size)}
-                    className={`px-4 py-2 rounded-lg border transition ${
-                      selectedSize === size
-                        ? 'bg-[#D4AF37] text-black border-[#D4AF37]'
-                        : 'bg-white/5 text-white border-white/20 hover:border-white/40'
-                    }`}
+                    className={selectedSize === size ? "bg-gold text-black hover:bg-gold-dark" : ""}
                   >
                     {size}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
 
             <div>
-              <label className="text-white font-semibold mb-3 block">Quantity</label>
+              <label className="text-sm font-medium mb-2 block">Quantity</label>
               <div className="flex items-center gap-4">
-                <button
+                <Button
+                  variant="outline"
+                  size="icon"
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="bg-white/5 p-2 rounded-lg hover:bg-white/10"
                 >
-                  <Minus size={20} className="text-white" />
-                </button>
-                <span className="text-white font-bold text-xl w-12 text-center">{quantity}</span>
-                <button
+                  <Minus className="h-4 w-4" />
+                </Button>
+                <span className="text-xl font-bold w-12 text-center">{quantity}</span>
+                <Button
+                  variant="outline"
+                  size="icon"
                   onClick={() => setQuantity(quantity + 1)}
-                  className="bg-white/5 p-2 rounded-lg hover:bg-white/10"
                 >
-                  <Plus size={20} className="text-white" />
-                </button>
+                  <Plus className="h-4 w-4" />
+                </Button>
               </div>
             </div>
 
-            <button
+            <Button
+              size="lg"
+              className="w-full bg-gold text-black hover:bg-gold-dark font-bold"
               onClick={handleAddToCart}
-              className="w-full bg-[#D4AF37] text-black py-4 rounded-lg font-bold hover:bg-[#C4A137] transition"
             >
-              Add to Cart - ${(product.price * quantity).toFixed(2)}
-            </button>
+              <ShoppingCart className="mr-2 h-5 w-5" />
+              Add to Cart
+            </Button>
           </div>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
-}
+};

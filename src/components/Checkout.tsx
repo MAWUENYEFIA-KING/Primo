@@ -1,116 +1,172 @@
-import { useState } from 'react';
-import { X } from 'lucide-react';
-import { CartItem } from './Cart';
+import { CartItem } from "@/types/product";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface CheckoutProps {
   isOpen: boolean;
   onClose: () => void;
   items: CartItem[];
-  total: number;
-  onSuccess: () => void;
+  onPaymentSuccess: () => void;
 }
 
-export default function Checkout({ isOpen, onClose, items, total, onSuccess }: CheckoutProps) {
-  const [formData, setFormData] = useState({ email: '', name: '', phone: '' });
-  const [loading, setLoading] = useState(false);
+declare global {
+  interface Window {
+    PaystackPop: any;
+  }
+}
 
-  if (!isOpen) return null;
+export const Checkout = ({ isOpen, onClose, items, onPaymentSuccess }: CheckoutProps) => {
+  const [formData, setFormData] = useState({
+    email: "",
+    firstName: "",
+    lastName: "",
+    phone: "",
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    const amountInNGN = Math.round(total * 1650);
+  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-    try {
-      // @ts-ignore
-      const handler = window.PaystackPop.setup({
-        key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || 'pk_test_default',
-        email: formData.email,
-        amount: amountInNGN * 100,
-        currency: 'NGN',
-        ref: 'LP-' + Date.now() + '-' + Math.floor(Math.random() * 1000000),
-        callback: function(response: any) {
-          alert('Payment successful! Reference: ' + response.reference);
-          onSuccess();
-          onClose();
-          setLoading(false);
-        },
-        onClose: function() {
-          setLoading(false);
-        }
-      });
-      handler.openIframe();
-    } catch (error) {
-      alert('Payment initialization failed');
-      setLoading(false);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handlePayment = () => {
+    if (!formData.email || !formData.firstName || !formData.lastName || !formData.phone) {
+      toast.error("Please fill in all fields");
+      return;
     }
+
+    if (!window.PaystackPop) {
+      toast.error("Payment system is loading. Please try again in a moment.");
+      return;
+    }
+
+    const handler = window.PaystackPop.setup({
+      key: 'pk_test_xxxxxxxxxxxxxx', // Replace with your Paystack public key
+      email: formData.email,
+      amount: total * 100, // Convert to kobo
+      currency: 'NGN',
+      ref: 'LP' + Math.floor((Math.random() * 1000000000) + 1),
+      metadata: {
+        custom_fields: [
+          {
+            display_name: "Customer Name",
+            variable_name: "customer_name",
+            value: `${formData.firstName} ${formData.lastName}`
+          },
+          {
+            display_name: "Phone Number",
+            variable_name: "phone_number",
+            value: formData.phone
+          }
+        ]
+      },
+      callback: function(response: any) {
+        toast.success("Payment successful! Order reference: " + response.reference);
+        onPaymentSuccess();
+        onClose();
+      },
+      onClose: function() {
+        toast.error("Payment cancelled");
+      }
+    });
+
+    handler.openIframe();
   };
 
   return (
-    <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-neutral-900 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <div className="sticky top-0 bg-neutral-900 border-b border-white/10 p-6 flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-white">Checkout</h2>
-          <button onClick={onClose} className="text-white/60 hover:text-white">
-            <X size={24} />
-          </button>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>Checkout</DialogTitle>
+        </DialogHeader>
+        
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email *</Label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="your@email.com"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="firstName">First Name *</Label>
+              <Input
+                id="firstName"
+                name="firstName"
+                placeholder="John"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="lastName">Last Name *</Label>
+              <Input
+                id="lastName"
+                name="lastName"
+                placeholder="Doe"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="phone">Phone Number *</Label>
+            <Input
+              id="phone"
+              name="phone"
+              type="tel"
+              placeholder="+234 xxx xxx xxxx"
+              value={formData.phone}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
+          <div className="border-t border-border pt-4 space-y-2">
+            <h3 className="font-bold">Order Summary</h3>
+            {items.map((item) => (
+              <div key={`${item.id}-${item.selectedSize}`} className="flex justify-between text-sm">
+                <span>{item.name} ({item.selectedSize}) x{item.quantity}</span>
+                <span className="text-gold">₦{(item.price * item.quantity).toLocaleString()}</span>
+              </div>
+            ))}
+            <div className="flex justify-between font-bold text-lg pt-2 border-t border-border">
+              <span>Total:</span>
+              <span className="text-gold">₦{total.toLocaleString()}</span>
+            </div>
+          </div>
+
+          <Button
+            size="lg"
+            className="w-full bg-gold text-black hover:bg-gold-dark font-bold"
+            onClick={handlePayment}
+          >
+            Pay with Paystack
+          </Button>
+
+          <p className="text-xs text-muted-foreground text-center">
+            Secure payment powered by Paystack. Supports card, bank transfer, and mobile money.
+          </p>
         </div>
-
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          <div className="space-y-4">
-            <div>
-              <label className="text-white font-semibold mb-2 block">Email *</label>
-              <input
-                type="email"
-                required
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full bg-white/5 text-white px-4 py-3 rounded-lg border border-white/10 focus:outline-none focus:border-[#D4AF37]"
-              />
-            </div>
-            <div>
-              <label className="text-white font-semibold mb-2 block">Full Name *</label>
-              <input
-                type="text"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full bg-white/5 text-white px-4 py-3 rounded-lg border border-white/10 focus:outline-none focus:border-[#D4AF37]"
-              />
-            </div>
-            <div>
-              <label className="text-white font-semibold mb-2 block">Phone *</label>
-              <input
-                type="tel"
-                required
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full bg-white/5 text-white px-4 py-3 rounded-lg border border-white/10 focus:outline-none focus:border-[#D4AF37]"
-              />
-            </div>
-          </div>
-
-          <div className="border-t border-white/10 pt-6">
-            <div className="space-y-2 mb-6">
-              <div className="flex justify-between">
-                <span className="text-white/60">Subtotal (USD)</span>
-                <span className="text-white">${total.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-xl">
-                <span className="text-white font-semibold">Total (NGN)</span>
-                <span className="text-[#D4AF37] font-bold">₦{(total * 1650).toLocaleString()}</span>
-              </div>
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-[#D4AF37] text-black py-4 rounded-lg font-bold hover:bg-[#C4A137] transition disabled:opacity-50"
-            >
-              {loading ? 'Processing...' : 'Pay with Paystack'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
-}
+};

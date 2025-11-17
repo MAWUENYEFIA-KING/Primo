@@ -1,76 +1,112 @@
-import { ShoppingCart, Search, User, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { ShoppingCart, Menu, X, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface HeaderProps {
-  cartCount: number;
+  cartItemsCount: number;
   onCartClick: () => void;
-  onSearchChange: (query: string) => void;
+  onSearch: (query: string) => void;
+  searchQuery: string;
 }
 
-export default function Header({ cartCount, onCartClick, onSearchChange }: HeaderProps) {
+export const Header = ({ cartItemsCount, onCartClick, onSearch, searchQuery }: HeaderProps) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 w-full bg-black/95 backdrop-blur-sm z-50 border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          <div className="flex items-center space-x-8">
-            <a href="/" className="text-2xl font-bold tracking-wider">
-              <span className="text-white">LEGEND</span>
-              <span className="text-[#D4AF37]">PRIMO</span>
-            </a>
-            <nav className="hidden md:flex space-x-6">
-              <a href="#home" className="text-white/80 hover:text-white transition">Home</a>
-              <a href="#shop" className="text-white/80 hover:text-white transition">Shop</a>
-              <a href="#about" className="text-white/80 hover:text-white transition">About</a>
-              <a href="#contact" className="text-white/80 hover:text-white transition">Contact</a>
-            </nav>
-          </div>
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 items-center justify-between px-4">
+        <div className="flex items-center gap-8">
+          <a href="/" className="text-2xl font-bold tracking-tight">
+            LEGEND<span className="text-gold">PRIMO</span>
+          </a>
           
-          <div className="flex items-center space-x-4">
-            <button onClick={() => setSearchOpen(!searchOpen)} className="text-white/80 hover:text-white">
-              <Search size={20} />
-            </button>
-            <button className="text-white/80 hover:text-white">
-              <User size={20} />
-            </button>
-            <button onClick={onCartClick} className="relative text-white/80 hover:text-white">
-              <ShoppingCart size={20} />
-              {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#D4AF37] text-black text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                  {cartCount}
-                </span>
-              )}
-            </button>
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden text-white">
-              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+          <nav className="hidden md:flex gap-6">
+            <a href="#home" className="text-sm font-medium hover-gold transition-colors">
+              Home
+            </a>
+            <a href="#shop" className="text-sm font-medium hover-gold transition-colors">
+              Shop
+            </a>
+            <a href="#about" className="text-sm font-medium hover-gold transition-colors">
+              About
+            </a>
+            <a href="#contact" className="text-sm font-medium hover-gold transition-colors">
+              Contact
+            </a>
+          </nav>
+        </div>
+
+        <div className="hidden md:flex items-center gap-4 flex-1 max-w-sm ml-8">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Search products..."
+              className="pl-10"
+              value={searchQuery}
+              onChange={(e) => onSearch(e.target.value)}
+            />
           </div>
         </div>
 
-        {searchOpen && (
-          <div className="pb-4">
-            <input
-              type="text"
-              placeholder="Search products..."
-              onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full bg-white/10 text-white placeholder-white/50 px-4 py-2 rounded-lg border border-white/20 focus:outline-none focus:border-[#D4AF37]"
-            />
-          </div>
-        )}
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="relative"
+            onClick={onCartClick}
+          >
+            <ShoppingCart className="h-5 w-5" />
+            {cartItemsCount > 0 && (
+              <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gold text-black text-xs flex items-center justify-center font-bold">
+                {cartItemsCount}
+              </span>
+            )}
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+        </div>
       </div>
 
       {mobileMenuOpen && (
-        <div className="md:hidden bg-black border-t border-white/10">
-          <nav className="flex flex-col space-y-4 px-4 py-6">
-            <a href="#home" className="text-white/80 hover:text-white">Home</a>
-            <a href="#shop" className="text-white/80 hover:text-white">Shop</a>
-            <a href="#about" className="text-white/80 hover:text-white">About</a>
-            <a href="#contact" className="text-white/80 hover:text-white">Contact</a>
+        <div className="md:hidden border-t border-border bg-background p-4">
+          <div className="mb-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search products..."
+                className="pl-10"
+                value={searchQuery}
+                onChange={(e) => onSearch(e.target.value)}
+              />
+            </div>
+          </div>
+          <nav className="flex flex-col gap-4">
+            <a href="#home" className="text-sm font-medium hover-gold transition-colors">
+              Home
+            </a>
+            <a href="#shop" className="text-sm font-medium hover-gold transition-colors">
+              Shop
+            </a>
+            <a href="#about" className="text-sm font-medium hover-gold transition-colors">
+              About
+            </a>
+            <a href="#contact" className="text-sm font-medium hover-gold transition-colors">
+              Contact
+            </a>
           </nav>
         </div>
       )}
     </header>
   );
-}
+};
