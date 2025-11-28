@@ -24,15 +24,11 @@ export const ProductModal = ({ product, isOpen, onClose, onAddToCart }: ProductM
   const selectedColor = currentColor?.name || "";
 
   const handleNextColor = () => {
-    if (currentColorIndex < product.colorVariants.length - 1) {
-      setCurrentColorIndex(currentColorIndex + 1);
-    }
+    if (currentColorIndex < product.colorVariants.length - 1) setCurrentColorIndex(currentColorIndex + 1);
   };
 
   const handlePreviousColor = () => {
-    if (currentColorIndex > 0) {
-      setCurrentColorIndex(currentColorIndex - 1);
-    }
+    if (currentColorIndex > 0) setCurrentColorIndex(currentColorIndex - 1);
   };
 
   const handleAddToCart = () => {
@@ -49,10 +45,14 @@ export const ProductModal = ({ product, isOpen, onClose, onAddToCart }: ProductM
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl">
+      <DialogContent
+        className="max-w-4xl max-h-[90vh] overflow-y-auto"
+        style={{ WebkitOverflowScrolling: "touch" }}
+      >
         <DialogHeader>
           <DialogTitle className="text-2xl">{product.name}</DialogTitle>
         </DialogHeader>
+
         <div className="grid md:grid-cols-2 gap-8">
           <div className="relative aspect-square bg-secondary rounded-lg overflow-hidden">
             <img
@@ -86,12 +86,13 @@ export const ProductModal = ({ product, isOpen, onClose, onAddToCart }: ProductM
               </>
             )}
           </div>
-          <div className="flex flex-col gap-6">
+
+          <div className="flex flex-col gap-6 overflow-y-auto">
             <div>
               <p className="text-sm text-muted-foreground mb-2">{product.category}</p>
               <p className="text-3xl font-bold text-gold">GH¢{product.price.toLocaleString()}</p>
             </div>
-            
+
             <div>
               <p className="text-foreground">{product.description}</p>
             </div>
