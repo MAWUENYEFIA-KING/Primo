@@ -11,7 +11,7 @@ interface ShopProps {
   searchQuery: string;
 }
 
-const categories: (ProductCategory | "All")[] = ["All", "T-Shirts", "Hoodies", "Trousers", "Jackets", "Shirts"];
+const categories: (ProductCategory | "All")[] = ["All", "T-Shirts", "Hoodies", "Joggies", "Men T-shirt", "Singlets"];
 
 export const Shop = ({ products, onAddToCart, onViewDetails, searchQuery }: ShopProps) => {
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | "All">("All");

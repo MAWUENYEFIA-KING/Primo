@@ -45,7 +45,7 @@ export const Cart = ({ isOpen, onClose, items, onUpdateQuantity, onRemoveItem, o
                       <h4 className="font-medium truncate">{item.name}</h4>
                       <p className="text-sm text-muted-foreground">Color: {item.selectedColor}</p>
                       <p className="text-sm text-muted-foreground">Size: {item.selectedSize}</p>
-                      <p className="text-gold font-bold">₦{item.price.toLocaleString()}</p>
+                      <p className="text-gold font-bold">GH¢{item.price.toLocaleString()}</p>
                       <div className="flex items-center gap-2 mt-2">
                         <Button
                           variant="outline"
@@ -82,14 +82,14 @@ export const Cart = ({ isOpen, onClose, items, onUpdateQuantity, onRemoveItem, o
             <div className="border-t border-border pt-4 space-y-4">
               <div className="flex justify-between text-lg font-bold">
                 <span>Total:</span>
-                <span className="text-gold">₦{total.toLocaleString()}</span>
+                <span className="text-gold">GH¢{total.toLocaleString()}</span>
               </div>
               <Button
                 size="lg"
                 className="w-full bg-gold text-black hover:bg-gold-dark font-bold"
                 onClick={onCheckout}
               >
-                Proceed to Checkout
+                Proceed to Order
               </Button>
             </div>
           </div>

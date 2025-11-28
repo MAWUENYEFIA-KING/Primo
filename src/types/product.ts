@@ -1,23 +1,26 @@
-export type ProductCategory = "T-Shirts" | "Hoodies" | "Trousers" | "Jackets" | "Shirts";
+export type ProductCategory = "T-Shirts" | "Hoodies" | "Joggies" | "Men T-shirt" | "Singlets"
 
 export interface ColorVariant {
-  name: string;
-  image: string;
+  name: string
+  image: string
 }
 
 export interface Product {
-  id: string;
-  name: string;
-  category: ProductCategory;
-  price: number;
-  image: string;
-  description: string;
-  sizes: string[];
-  colorVariants: ColorVariant[];
+  id: string
+  name: string
+  category: ProductCategory
+  price: number
+  image: string
+  description: string
+  sizes: string[]
+  colorVariants: ColorVariant[]
 }
 
-export interface CartItem extends Product {
-  quantity: number;
-  selectedSize: string;
-  selectedColor: string;
+export interface CartItem {
+  id: string
+  name: string
+  price: number
+  quantity: number
+  selectedSize: string
+  selectedColor: string
 }

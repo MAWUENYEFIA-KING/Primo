@@ -1,22 +1,16 @@
-import { CartItem } from "@/types/product";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useState } from "react";
-import { toast } from "sonner";
+import { CartItem } from "@/types/product"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { useState } from "react"
+import { toast } from "sonner"
 
 interface CheckoutProps {
-  isOpen: boolean;
-  onClose: () => void;
-  items: CartItem[];
-  onPaymentSuccess: () => void;
-}
-
-declare global {
-  interface Window {
-    PaystackPop: any;
-  }
+  isOpen: boolean
+  onClose: () => void
+  items: CartItem[]
+  onPaymentSuccess: () => void
 }
 
 export const Checkout = ({ isOpen, onClose, items, onPaymentSuccess }: CheckoutProps) => {
@@ -24,61 +18,42 @@ export const Checkout = ({ isOpen, onClose, items, onPaymentSuccess }: CheckoutP
     email: "",
     firstName: "",
     lastName: "",
-    phone: "",
-  });
+    phone: ""
+  })
 
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+      [e.target.name]: e.target.value
+    })
+  }
 
-  const handlePayment = () => {
+  const handleContactSeller = () => {
     if (!formData.email || !formData.firstName || !formData.lastName || !formData.phone) {
-      toast.error("Please fill in all fields");
-      return;
+      toast.error("Fill all fields")
+      return
     }
 
-    if (!window.PaystackPop) {
-      toast.error("Payment system is loading. Please try again in a moment.");
-      return;
-    }
+    const owner = "233264970581"
 
-    const handler = window.PaystackPop.setup({
-      key: 'pk_test_xxxxxxxxxxxxxx', // Replace with your Paystack public key
-      email: formData.email,
-      amount: total * 100, // Convert to kobo
-      currency: 'NGN',
-      ref: 'LP' + Math.floor((Math.random() * 1000000000) + 1),
-      metadata: {
-        custom_fields: [
-          {
-            display_name: "Customer Name",
-            variable_name: "customer_name",
-            value: `${formData.firstName} ${formData.lastName}`
-          },
-          {
-            display_name: "Phone Number",
-            variable_name: "phone_number",
-            value: formData.phone
-          }
-        ]
-      },
-      callback: function(response: any) {
-        toast.success("Payment successful! Order reference: " + response.reference);
-        onPaymentSuccess();
-        onClose();
-      },
-      onClose: function() {
-        toast.error("Payment cancelled");
-      }
-    });
+    const itemsText = items
+      .map(i => `${i.name} Size:${i.selectedSize} Color:${i.selectedColor} Qty:${i.quantity}`)
+      .join(", ")
 
-    handler.openIframe();
-  };
+    const msg =
+      `New order\n` +
+      `Name: ${formData.firstName} ${formData.lastName}\n` +
+      `Email: ${formData.email}\n` +
+      `Phone: ${formData.phone}\n\n` +
+      `Items: ${itemsText}\n` +
+      `Total: GHC${total.toLocaleString()}\n`
+
+    const url = `https://wa.me/${owner}?text=${encodeURIComponent(msg)}`
+
+    window.location.href = url
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -86,7 +61,7 @@ export const Checkout = ({ isOpen, onClose, items, onPaymentSuccess }: CheckoutP
         <DialogHeader>
           <DialogTitle>Checkout</DialogTitle>
         </DialogHeader>
-        
+
         <div className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email *</Label>
@@ -107,7 +82,7 @@ export const Checkout = ({ isOpen, onClose, items, onPaymentSuccess }: CheckoutP
               <Input
                 id="firstName"
                 name="firstName"
-                placeholder="John"
+                placeholder="Smith"
                 value={formData.firstName}
                 onChange={handleInputChange}
                 required
@@ -119,7 +94,7 @@ export const Checkout = ({ isOpen, onClose, items, onPaymentSuccess }: CheckoutP
               <Input
                 id="lastName"
                 name="lastName"
-                placeholder="Doe"
+                placeholder="Yeboah"
                 value={formData.lastName}
                 onChange={handleInputChange}
                 required
@@ -142,31 +117,33 @@ export const Checkout = ({ isOpen, onClose, items, onPaymentSuccess }: CheckoutP
 
           <div className="border-t border-border pt-4 space-y-2">
             <h3 className="font-bold">Order Summary</h3>
-            {items.map((item) => (
-              <div key={`${item.id}-${item.selectedSize}`} className="flex justify-between text-sm">
-                <span>{item.name} ({item.selectedSize}) x{item.quantity}</span>
-                <span className="text-gold">₦{(item.price * item.quantity).toLocaleString()}</span>
+            {items.map(item => (
+              <div key={`${item.id}-${item.selectedSize}-${item.selectedColor}`} className="flex justify-between text-sm">
+                <span>
+                  {item.name} ({item.selectedSize}, {item.selectedColor}) x{item.quantity}
+                </span>
+                <span className="text-gold">GH¢{(item.price * item.quantity).toLocaleString()}</span>
               </div>
             ))}
             <div className="flex justify-between font-bold text-lg pt-2 border-t border-border">
               <span>Total:</span>
-              <span className="text-gold">₦{total.toLocaleString()}</span>
+              <span className="text-gold">GH¢{total.toLocaleString()}</span>
             </div>
           </div>
 
           <Button
             size="lg"
-            className="w-full bg-gold text-black hover:bg-gold-dark font-bold"
-            onClick={handlePayment}
+            className="w-full bg-gold text-black font-bold"
+            onClick={handleContactSeller}
           >
-            Pay with Paystack
+            Contact Seller on WhatsApp
           </Button>
 
           <p className="text-xs text-muted-foreground text-center">
-            Secure payment powered by Paystack. Supports card, bank transfer, and mobile money.
+            Seller will contact you to complete payment.
           </p>
         </div>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

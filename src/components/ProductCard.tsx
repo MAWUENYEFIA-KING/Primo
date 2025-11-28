@@ -23,7 +23,7 @@ export const ProductCard = ({ product, onAddToCart, onViewDetails }: ProductCard
       <CardContent className="p-4">
         <h3 className="font-bold text-lg mb-1 truncate">{product.name}</h3>
         <p className="text-sm text-muted-foreground mb-2">{product.category}</p>
-        <p className="text-xl font-bold text-gold mb-4">₦{product.price.toLocaleString()}</p>
+        <p className="text-xl font-bold text-gold mb-4">GH¢{product.price.toLocaleString()}</p>
         <div className="flex gap-2">
           <Button
             size="sm"

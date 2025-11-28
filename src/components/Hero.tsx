@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import heroBg from "@/assets/hero-bg.jpg";
+import heroBg from "@/assets/Prodcut_1.webp";
 
 export const Hero = () => {
   return (
@@ -17,7 +17,7 @@ export const Hero = () => {
           LEGEND<span className="text-gold">PRIMO</span>
         </h1>
         <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl">
-          Elevate Your Style with Premium Menswear
+          Elevate Your Style with Us
         </p>
         <div className="flex flex-col sm:flex-row gap-4">
           <Button

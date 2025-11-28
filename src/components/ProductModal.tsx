@@ -89,7 +89,7 @@ export const ProductModal = ({ product, isOpen, onClose, onAddToCart }: ProductM
           <div className="flex flex-col gap-6">
             <div>
               <p className="text-sm text-muted-foreground mb-2">{product.category}</p>
-              <p className="text-3xl font-bold text-gold">₦{product.price.toLocaleString()}</p>
+              <p className="text-3xl font-bold text-gold">GH¢{product.price.toLocaleString()}</p>
             </div>
             
             <div>
