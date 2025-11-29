@@ -1,4 +1,4 @@
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
+import { Store, Instagram, Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -12,11 +12,19 @@ export const Footer = () => {
               LEGEND<span className="text-gold">PRIMO</span>
             </h3>
             <p className="text-sm text-primary-foreground/80 mb-4">
-              Premium menswear for the modern gentleman. Elevate your style with our exclusive collection.
+              Elevate your style with LegendPrimo - where fashion meets excellence.
             </p>
+
             <div className="flex gap-3">
-              <Button variant="ghost" size="icon" className="hover:text-gold">
-                <Facebook className="h-5 w-5" />
+
+              <Button variant="ghost" size="icon" className="hover:text-gold" asChild>
+                <a
+                  href="https://legendsprimo.myshopify.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Store className="h-5 w-5" />
+                </a>
               </Button>
 
               <Button variant="ghost" size="icon" className="hover:text-gold" asChild>
@@ -29,9 +37,6 @@ export const Footer = () => {
                 </a>
               </Button>
 
-              <Button variant="ghost" size="icon" className="hover:text-gold">
-                <Twitter className="h-5 w-5" />
-              </Button>
             </div>
           </div>
 
@@ -57,7 +62,7 @@ export const Footer = () => {
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="h-4 w-4 flex-shrink-0" />
-                <span>legendsprimo.myshopify.com</span>
+                <span>legendsprimo1@gmailcom</span>
               </li>
             </ul>
           </div>

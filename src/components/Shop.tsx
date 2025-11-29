@@ -11,7 +11,7 @@ interface ShopProps {
   searchQuery: string;
 }
 
-const categories: (ProductCategory | "All")[] = ["All", "T-Shirts", "Hoodies", "Joggies", "Men T-shirt", "Singlets"];
+const categories: (ProductCategory | "All")[] = ["All", "T-Shirts", "Hoodies", "Joggers", "Men T-shirt", "Singlets"];
 
 export const Shop = ({ products, onAddToCart, onViewDetails, searchQuery }: ShopProps) => {
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | "All">("All");
@@ -31,7 +31,7 @@ export const Shop = ({ products, onAddToCart, onViewDetails, searchQuery }: Shop
             Our <span className="text-gold">Collection</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Discover premium quality menswear crafted for the modern gentleman
+            Explore our exclusive range of apparel designed to elevate your style and comfort.
           </p>
         </div>
 

@@ -54,7 +54,7 @@ export const products: Product[] = [
     category: "T-Shirts",
     price: 150,
     image: tshirt1,
-    description: "Premium quality t-shirt with minimalist gold logo, available in multiple colors",
+    description: "High-quality cotton t-shirt with gold accents, available in multiple colors",
     sizes: ["S", "M", "L", "XL", "XXL"],
     colorVariants: [
       { name: "Light Brown", image: tshirt1 },
@@ -71,7 +71,7 @@ export const products: Product[] = [
     category: "T-Shirts",
     price: 200,
     image: legendprimopink,
-    description: "Elegant cotton t-shirt with subtle gold embroidery, multiple color options",
+    description: " Sleek women's t-shirt, available in multiple colors",
     sizes: ["S", "M", "L", "XL", "XXL"],
     colorVariants: [
        { name: "Pink", image: legendprimopink },
@@ -87,7 +87,7 @@ export const products: Product[] = [
     category: "Hoodies",
     price: 250,
     image: hoodie1,
-    description: "Premium hoodie with gold zipper detail, available in luxury colors",
+    description: "High-quality hoodie with stylish zipper, available in elegant colors.",
     sizes: ["S", "M", "L", "XL", "XXL"],
     colorVariants: [
       { name: "Red", image: hoodie1 },
@@ -103,7 +103,7 @@ export const products: Product[] = [
     category: "Hoodies",
     price: 200,
     image: hoodie2,
-    description: "Premium hoodie with signature black and gold logo, multiple colors",
+    description: "Signature hoodie with classic logo, available in multiple colors",
     sizes: ["S", "M", "L", "XL", "XXL"],
     colorVariants: [
       { name: "Charcoal", image: hoodie2 },
@@ -120,7 +120,7 @@ export const products: Product[] = [
     category: "Men T-shirt",
     price: 200,
     image: T_shirt,
-    description: "Luxury bomber jacket with gold hardware, premium color options",
+    description: "Stylish t-shirt available in a variety of colors",
     sizes: ["S", "M", "L", "XL", "XXL"],
     colorVariants: [
       { name: "Blue", image: T_shirt },
@@ -133,11 +133,11 @@ export const products: Product[] = [
   },
   {
     id: "6",
-    name: "Joggies",
-    category: "Joggies",
+    name: "Joggers",
+    category: "Joggers",
     price: 250,
     image: trouser1,
-    description: "Premium formal trousers with gold button detail, classic colors",
+    description: "Comfortable joggers in classic colors",
     sizes: ["28", "30", "32", "34", "36", "38"],
     colorVariants: [
       { name: "Blue", image: trouser1 },
@@ -156,7 +156,7 @@ export const products: Product[] = [
     category: "Singlets",
     price: 50,
     image: SingletBlack,
-    description: "Professional dress shirt with gold cufflinks, versatile colors",
+    description: "Casual singlet available in versatile colors",
     sizes: ["S", "M", "L", "XL", "XXL"],
     colorVariants: [
        { name: "Black", image: SingletBlack},

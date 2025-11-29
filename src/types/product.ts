@@ -1,4 +1,4 @@
-export type ProductCategory = "T-Shirts" | "Hoodies" | "Joggies" | "Men T-shirt" | "Singlets"
+export type ProductCategory = "T-Shirts" | "Hoodies" | "Joggers" | "Men T-shirt" | "Singlets"
 
 export interface ColorVariant {
   name: string
