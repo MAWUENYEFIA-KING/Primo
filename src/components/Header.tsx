@@ -29,9 +29,7 @@ export const Header = ({ cartItemsCount, onCartClick, onSearch, searchQuery }: H
             <a href="#shop" className="text-sm font-medium hover-gold transition-colors">
               Shop
             </a>
-            <a href="#about" className="text-sm font-medium hover-gold transition-colors">
-              About
-            </a>
+            
             <a href="#contact" className="text-sm font-medium hover-gold transition-colors">
               Contact
             </a>
@@ -98,9 +96,7 @@ export const Header = ({ cartItemsCount, onCartClick, onSearch, searchQuery }: H
             <a href="#shop" className="text-sm font-medium hover-gold transition-colors">
               Shop
             </a>
-            <a href="#about" className="text-sm font-medium hover-gold transition-colors">
-              About
-            </a>
+           
             <a href="#contact" className="text-sm font-medium hover-gold transition-colors">
               Contact
             </a>

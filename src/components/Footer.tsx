@@ -18,9 +18,17 @@ export const Footer = () => {
               <Button variant="ghost" size="icon" className="hover:text-gold">
                 <Facebook className="h-5 w-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="hover:text-gold">
-                <Instagram className="h-5 w-5" />
+
+              <Button variant="ghost" size="icon" className="hover:text-gold" asChild>
+                <a
+                  href="https://www.instagram.com/legends_primo?igsh=MWQxbTlsdDU2NWw5Zg=="
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Instagram className="h-5 w-5" />
+                </a>
               </Button>
+
               <Button variant="ghost" size="icon" className="hover:text-gold">
                 <Twitter className="h-5 w-5" />
               </Button>
@@ -32,7 +40,6 @@ export const Footer = () => {
             <ul className="space-y-2 text-sm">
               <li><a href="#home" className="hover:text-gold transition-colors">Home</a></li>
               <li><a href="#shop" className="hover:text-gold transition-colors">Shop</a></li>
-              <li><a href="#about" className="hover:text-gold transition-colors">About</a></li>
               <li><a href="#contact" className="hover:text-gold transition-colors">Contact</a></li>
             </ul>
           </div>
