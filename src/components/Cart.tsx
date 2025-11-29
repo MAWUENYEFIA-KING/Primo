@@ -33,14 +33,18 @@ export const Cart = ({ isOpen, onClose, items, onUpdateQuantity, onRemoveItem, o
             <ScrollArea className="flex-1 -mx-4 px-4 my-4 sm:-mx-6 sm:px-6 sm:my-6">
               <div className="space-y-4">
                 {items.map((item) => (
-                  <div key={`${item.id}-${item.selectedSize}-${item.selectedColor}`} className="flex flex-col sm:flex-row gap-4 pb-4 border-b border-border">
-                    <div className="w-full sm:w-20 h-40 sm:h-20 bg-secondary rounded overflow-hidden flex-shrink-0">
+                  <div
+                    key={`${item.id}-${item.selectedSize}-${item.selectedColor}`}
+                    className="flex flex-col sm:flex-row gap-4 pb-4 border-b border-border"
+                  >
+                    <div className="w-full sm:w-20 aspect-square bg-secondary rounded overflow-hidden flex-shrink-0">
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                       />
                     </div>
+
                     <div className="flex-1 min-w-0 flex flex-col justify-between">
                       <div>
                         <h4 className="font-medium truncate">{item.name}</h4>
@@ -48,28 +52,48 @@ export const Cart = ({ isOpen, onClose, items, onUpdateQuantity, onRemoveItem, o
                         <p className="text-sm text-muted-foreground">Size: {item.selectedSize}</p>
                         <p className="text-gold font-bold">GH¢{item.price.toLocaleString()}</p>
                       </div>
+
                       <div className="flex items-center gap-2 mt-2 flex-wrap">
                         <Button
                           variant="outline"
                           size="icon"
                           className="h-8 w-8"
-                          onClick={() => onUpdateQuantity(item.id, item.selectedSize, item.selectedColor, Math.max(1, item.quantity - 1))}
+                          onClick={() =>
+                            onUpdateQuantity(
+                              item.id,
+                              item.selectedSize,
+                              item.selectedColor,
+                              Math.max(1, item.quantity - 1)
+                            )
+                          }
                         >
                           <Minus className="h-4 w-4" />
                         </Button>
+
                         <span className="text-sm w-8 text-center">{item.quantity}</span>
+
                         <Button
                           variant="outline"
                           size="icon"
                           className="h-8 w-8"
-                          onClick={() => onUpdateQuantity(item.id, item.selectedSize, item.selectedColor, item.quantity + 1)}
+                          onClick={() =>
+                            onUpdateQuantity(
+                              item.id,
+                              item.selectedSize,
+                              item.selectedColor,
+                              item.quantity + 1
+                            )
+                          }
                         >
                           <Plus className="h-4 w-4" />
                         </Button>
+
                         <Button
                           variant="ghost"
                           size="icon"
-                          onClick={() => onRemoveItem(item.id, item.selectedSize, item.selectedColor)}
+                          onClick={() =>
+                            onRemoveItem(item.id, item.selectedSize, item.selectedColor)
+                          }
                           className="ml-auto sm:ml-0"
                         >
                           <Trash2 className="h-5 w-5 text-destructive" />
@@ -86,6 +110,7 @@ export const Cart = ({ isOpen, onClose, items, onUpdateQuantity, onRemoveItem, o
                 <span>Total:</span>
                 <span className="text-gold">GH¢{total.toLocaleString()}</span>
               </div>
+
               <Button
                 size="lg"
                 className="w-full bg-gold text-black hover:bg-gold-dark font-bold"
