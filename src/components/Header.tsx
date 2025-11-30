@@ -88,14 +88,29 @@ export const Header = ({ cartItemsCount, onCartClick, onSearch, searchQuery }: H
               />
             </div>
           </div>
+
           <nav className="flex flex-col gap-4">
-            <a href="#home" className="text-sm font-medium hover-gold transition-colors">
+            <a
+              href="#home"
+              className="text-sm font-medium hover-gold transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               Home
             </a>
-            <a href="#shop" className="text-sm font-medium hover-gold transition-colors">
+
+            <a
+              href="#shop"
+              className="text-sm font-medium hover-gold transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               Shop
             </a>
-            <a href="#contact" className="text-sm font-medium hover-gold transition-colors">
+
+            <a
+              href="#contact"
+              className="text-sm font-medium hover-gold transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               Contact
             </a>
           </nav>
