@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 
 export const Footer = () => {
   return (
-    <footer className="bg-primary text-primary-foreground">
+    <footer id="contact" className="bg-primary text-primary-foreground">
       <div className="container px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           <div>
@@ -12,7 +12,7 @@ export const Footer = () => {
               LEGEND<span className="text-gold">PRIMO</span>
             </h3>
             <p className="text-sm text-primary-foreground/80 mb-4">
-              Elevate your style with LegendPrimo - where fashion meets excellence.
+              Premium menswear for the modern gentleman. Elevate your style with our exclusive collection.
             </p>
 
             <div className="flex gap-3">
